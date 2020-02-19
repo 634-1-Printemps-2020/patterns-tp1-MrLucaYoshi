@@ -1,5 +1,7 @@
 package metier;
 
+import outils.Labyrinthe;
+
 import java.util.*;
 
 public class PyRat {
@@ -26,6 +28,12 @@ public class PyRat {
     /* Regarde dans la liste des fromages s’il y a un fromage à la position pos.
         @return true s'il y a un fromage à la position pos, false sinon. */
     private boolean fromageIci(Point pos) {
+        List<Point> fromages = Labyrinthe.getFromages();
+        for(Point point : fromages){
+            if(point.equals(pos)){
+                return true;
+            }
+        }
         return false;
     }
 
