@@ -10,6 +10,7 @@ public class Main {
     public static void main (String[] args) {
         PyRat pyrat = new PyRat();
         final Map<Point, List<Point>> laby = Labyrinthe.getLaby();
+        //System.out.println(laby);
         final int labyWidth = Labyrinthe.getLabyWidth();
         final int labyHeight = Labyrinthe.getLabyHeight();
         Point position = Labyrinthe.getPosition();
