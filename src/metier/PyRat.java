@@ -7,7 +7,9 @@ import java.util.*;
 public class PyRat {
 
     //ArrayList<Point> lstFromages;
-    HashSet<Point> lstFromagesn1;
+    private HashSet<Point> lstFromagesn1;
+    private HashSet<Point> passagePossiblen1;
+    private HashMap<Point, HashSet<Point>> mapN1;
     /* Méthode appelée une seule fois permettant d'effectuer des traitements "lourds" afin d'augmenter la performace de la méthode turn. */
     public void preprocessing(Map<Point, List<Point>> laby, int labyWidth, int labyHeight, Point position, List<Point> fromages) {
         /*lstFromages = new ArrayList<>();
@@ -16,6 +18,15 @@ public class PyRat {
         }*/
         lstFromagesn1 = new HashSet<>();
         lstFromagesn1.addAll(fromages);
+
+        mapN1 = new HashMap<>();
+        passagePossiblen1 = new HashSet<>();
+        for(Point point : laby.keySet()){
+           for(Point point2 : laby.get(point)){
+               passagePossiblen1.add(point2);
+           }
+           mapN1.put(point, passagePossiblen1);
+        }
     }
 
     /* Méthode de test appelant les différentes fonctionnalités à développer.
@@ -30,7 +41,7 @@ public class PyRat {
         System.out.println((fromageIci_EnOrdreConstant(pt2) ? "Il y a un" : "Il n'y a pas de") + " fromage ici, en position " + pt2);
         System.out.println((passagePossible(pt1, pt2, laby) ? "Il y a un" : "Il n'y a pas de") + " passage de " + pt1 + " vers " + pt2);
         System.out.println((passagePossible_EnOrdreConstant(pt1, pt2) ? "Il y a un" : "Il n'y a pas de") + " passage de " + pt1 + " vers " + pt2);
-        System.out.println("Liste des points inatteignables depuis la position " + position + " : " + pointsInatteignables(position));
+        System.out.println("Liste des points inatteignables depuis la position " + position + " : " + pointsInatteignables(position, laby));
     }
 
     /* Regarde dans la liste des fromages s’il y a un fromage à la position pos.
@@ -59,7 +70,7 @@ public class PyRat {
     private boolean passagePossible(Point de, Point a, Map<Point, List<Point>> laby) {
         for(int i=0; i<laby.size(); i++){
             if(laby.containsKey(de)){
-                if(laby.containsValue(a)){
+                if(laby.get(de).contains(a)){
                     return true;
                 }
             }
@@ -71,12 +82,22 @@ public class PyRat {
         mais sans devoir parcourir la liste des Points se trouvant dans la Map !
         @return true s'il y a un passage depuis  « de » vers « a ». */
     private boolean passagePossible_EnOrdreConstant(Point de, Point a) {
+        if (mapN1.containsKey(de)) {
+            if(mapN1.get(de).contains(a)){
+                return true;
+            }
+        }
         return false;
     }
 
     /* Retourne la liste des points qui ne peuvent pas être atteints depuis la position « pos ».
         @return la liste des points qui ne peuvent pas être atteints depuis la position « pos ». */
-    private List<Point> pointsInatteignables(Point pos) {
-        return null;
+    private List<Point> pointsInatteignables(Point pos, Map<Point, List<Point>> laby) {
+        List<Point> pointsIna = laby.get(pos);
+        ArrayList<Point> lstPoints = new ArrayList(laby.entrySet());
+        for(Point point : pointsIna){
+            lstPoints.remove(point);
+        }
+     return lstPoints;
     }
 }
